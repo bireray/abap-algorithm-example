@@ -1,0 +1,157 @@
+
+MAIN KOD
+*&---------------------------------------------------------------------*
+*& Report ZEO_PROJECT1
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZEO_PROJECT1.
+
+INCLUDE ZEO_PROJECT1_TOP.
+INCLUDE ZEO_PROJECT1_FORM.
+
+
+START-OF-SELECTION.
+PERFORM getdata.
+
+
+
+TOP KOD - DATA DECLARATIONS
+
+*&---------------------------------------------------------------------*
+*&  Include           ZEO_PROJECT1_TOP
+*&---------------------------------------------------------------------*
+
+
+data: gv_sonuc type int2,
+      gv_check type int2,
+      gv_count type int2.
+
+
+
+PARAMETERS: p1 TYPE int1,
+            p2 TYPE int1.
+
+SELECTION-SCREEN BEGIN OF BLOCK b1 WITH FRAME TITLE TEXT-001.
+
+PARAMETERS: p_sum  RADIOBUTTON GROUP rad1,
+            p_sub  RADIOBUTTON GROUP rad1,
+            p_mult RADIOBUTTON GROUP rad1,
+            p_div  RADIOBUTTON GROUP rad1,
+            p_sqr  RADIOBUTTON GROUP rad1,
+            p_rtt  RADIOBUTTON GROUP rad1.
+
+SELECTION-SCREEN END OF BLOCK b1.
+
+
+
+FORM KOD - DATA PROCESS
+
+
+*&---------------------------------------------------------------------*
+*&  Include           ZEO_PROJECT1_FORM
+* p_sum +
+* p_sub +
+* p_mult +
+* p_div +
+* p_sqr +
+* p_rtt
+*&---------------------------------------------------------------------*
+
+
+FORM getdata.
+
+
+  IF p_sum EQ 'X'.
+    gv_sonuc = p1 + p2.
+    WRITE gv_sonuc.
+
+  ELSEIF p_div EQ 'X'.
+    DO.
+      IF gv_check NE p1.
+        gv_check = p2 + gv_check.
+        gv_count = gv_count + 1.
+      ELSE.
+        WRITE gv_count.
+        EXIT.
+      ENDIF.
+    ENDDO.
+
+
+  ELSEIF p_sub EQ 'X'.
+    DO.
+      IF p2 + gv_check NE p1.
+        gv_check = gv_check + 1.
+      ELSE.
+        WRITE gv_check.
+        EXIT.
+
+      ENDIF.
+
+    ENDDO.
+
+
+  ELSEIF p_mult EQ 'X'.
+
+    DO p1 TIMES.
+      gv_check = p2 + gv_check.
+    ENDDO.
+    WRITE gv_check.
+
+  ELSEIF p_sqr EQ 'X'.
+
+    DO p1 TIMES.
+      gv_check = p1 + gv_check.
+
+    ENDDO.
+
+    DO p2 TIMES.
+      gv_count = p2 + gv_count.
+
+    ENDDO.
+
+
+    WRITE: 'Birinci Sayının Karesi :' ,  gv_check.
+    WRITE: 'İkinci Sayının Karesi  :' ,  gv_count.
+
+
+  ELSEIF p_rtt EQ 'X'.
+
+    DATA: gv_sonuc2 TYPE int1,
+          gv_count2 TYPE int1.
+
+    DO.
+      IF gv_sonuc NE p1 AND gv_sonuc2 NE p2.
+        gv_count = gv_count + 1.
+        gv_sonuc = gv_count * gv_count.
+      ELSE.
+        WRITE: 'Birinci Sayının Kökü:' , gv_count.
+        EXIT.
+      ENDIF.
+
+    ENDDO.
+
+    DO.
+      IF gv_sonuc2 NE p2.
+        gv_count2 = gv_count2 + 1.
+        gv_sonuc2 = gv_count2 * gv_count2.
+      ELSE.
+        WRITE: 'İkinci Sayının Karesi:' , gv_count2.
+        EXIT.
+      ENDIF.
+
+    ENDDO.
+
+
+  ENDIF.
+
+
+
+
+
+ENDFORM.
+
+
+
+
+
